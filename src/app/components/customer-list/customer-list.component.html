@@ -1,0 +1,270 @@
+<div class="container wrapper">
+    <div class="row">
+        <mat-toolbar color="primary">
+
+            <mat-toolbar-row>
+                <span>Family Category: "{{getElementInfo().Category}}"</span>
+            </mat-toolbar-row>
+
+            <mat-toolbar-row>
+                <span>Family Name: "{{getElementInfo().Name}}"</span>
+            </mat-toolbar-row>
+
+        </mat-toolbar>
+
+
+        <div class="col-md-12">
+            <div class="inner">
+                <mat-tab-group>
+                    <mat-tab label="Show All">
+                        <!-- paramater table -->
+                        <mat-accordion>
+                            <mat-expansion-panel class="mat-expansion-panel-element-parameters" [expanded]="true">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Element Parameters
+                                    </mat-panel-title>
+
+                                    <mat-panel-description (click)="togglePanel()">
+                                        Toggle Collapse/Expand
+                                    </mat-panel-description>
+                                </mat-expansion-panel-header>
+
+                                <mat-accordion *ngFor="let group of getGroups(elementParameters)">
+                                    <mat-expansion-panel [expanded]="panelElementOpenState">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                {{group}}
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <table mat-table [dataSource]="getParametersByGroup(elementParameters,group)" class="mat-elevation-z8">
+                                            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+                                            <!-- Name Column -->
+                                            <ng-container matColumnDef="name">
+                                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                            </ng-container>
+
+                                            <!-- Value Column -->
+                                            <ng-container matColumnDef="value">
+                                                <th mat-header-cell *matHeaderCellDef> Value </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <mat-checkbox #checkbox *ngIf='showCheckBox(element)' (change)="setValue($event,element)" [disabled]="!isModifiable(element)" [checked]='getValue(element,true)'>
+                                                    </mat-checkbox>
+                                                    <input #box class="matInputNumber" *ngIf="showInputArea(element)" [disabled]="!isModifiable(element)" (keyup.enter)="setValue($event,element)" (focusout)="resetValue($event,element)" [type]="getInputType(element)" [value]="getValue(element)">
+                                                    <form *ngIf="showTextArea(element)">
+                                                        <mat-form-field class="matInputTextArea">
+                                                            <textarea matInput (focusout)="resetValue($event,element)" [disabled]="!isModifiable(element)" (keyup.enter)="setValue($event,element)" [type]="getInputType(element)" [value]="getValue(element)"></textarea>
+                                                        </mat-form-field>
+                                                    </form>
+                                                </td>
+                                            </ng-container>
+
+                                            <!-- Abbrev Column -->
+                                            <ng-container layout="row" matColumnDef="abbrev">
+                                                <th mat-header-cell *matHeaderCellDef> Units </th>
+                                                <td mat-cell class="mat-cell-abbrev" layout="row" *matCellDef="let element">
+                                                    {{getAbbrev(element)}} </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                        </table>
+
+                                    </mat-expansion-panel>
+                                    <mat-divider></mat-divider>
+                                </mat-accordion>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+
+                        <mat-divider></mat-divider>
+                        <mat-accordion *ngIf="showElectricalSystem(element)">
+                            <mat-expansion-panel class="mat-expansion-panel-system-parameters" [expanded]="true">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Electrical System Parameters
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <mat-accordion *ngFor="let group of getGroups(systemParameters)">
+                                    <mat-expansion-panel [expanded]="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                {{group}}
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <table mat-table [dataSource]="getParametersByGroup(systemParameters,group)" class="mat-elevation-z8">
+                                            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+                                            <!-- Name Column -->
+                                            <ng-container matColumnDef="name">
+                                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                            </ng-container>
+
+                                            <!-- Value Column -->
+                                            <ng-container matColumnDef="value">
+                                                <th mat-header-cell *matHeaderCellDef> Value </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <mat-checkbox #checkbox *ngIf='showCheckBox(element)' (change)="setValue($event,element)" [checked]='getValue(element,true)'>
+                                                    </mat-checkbox>
+                                                    <input #box class="matInputNumber" *ngIf="showInputArea(element)" [disabled]="!isModifiable(element)" (keyup.enter)="setValue($event,element)" (focusout)="resetValue($event,element)" [type]="getInputType(element)" [value]="getValue(element)">
+                                                    <form *ngIf="showTextArea(element)">
+                                                        <mat-form-field class="matInputTextArea">
+                                                            <textarea matInput (focusout)="resetValue($event,element)" [disabled]="!isModifiable(element)" (keyup.enter)="setValue($event,element)" [type]="getInputType(element)" [value]="getValue(element)"></textarea>
+                                                        </mat-form-field>
+                                                    </form>
+                                                </td>
+                                            </ng-container>
+
+                                            <!-- Abbrev Column -->
+                                            <ng-container layout="row" matColumnDef="abbrev">
+                                                <th mat-header-cell *matHeaderCellDef> Units </th>
+                                                <td mat-cell class="mat-cell-abbrev" layout="row" *matCellDef="let element">
+                                                    {{getAbbrev(element)}} </td>
+                                            </ng-container>
+
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                        </table>
+
+                                    </mat-expansion-panel>
+                                    <mat-divider></mat-divider>
+                                </mat-accordion>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </mat-tab>
+                    <mat-tab label="Element Only">
+                        <mat-accordion>
+                            <mat-expansion-panel class="mat-expansion-panel-element-parameters" [expanded]="true">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Element Parameters
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <mat-accordion *ngFor="let group of getGroups(elementParameters)">
+                                    <mat-expansion-panel [expanded]="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                {{group}}
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <table mat-table [dataSource]="getParametersByGroup(elementParameters,group)" class="mat-elevation-z8">
+                                            <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+                                            <!-- Name Column -->
+                                            <ng-container matColumnDef="name">
+                                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                            </ng-container>
+
+                                            <!-- Value Column -->
+                                            <ng-container matColumnDef="value">
+                                                <th mat-header-cell *matHeaderCellDef> Value </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <mat-checkbox #checkbox *ngIf='showCheckBox(element)' (change)="setValue($event,element)" [checked]='getValue(element,true)'>
+                                                    </mat-checkbox>
+                                                    <input #box class="matInputNumber" *ngIf="showInputArea(element)" [disabled]="!isModifiable(element)" (keyup.enter)="setValue($event,element)" (focusout)="resetValue($event,element)" [type]="getInputType(element)" [value]="getValue(element)">
+                                                    <form *ngIf="showTextArea(element)">
+                                                        <mat-form-field class="matInputTextArea">
+                                                            <textarea matInput (focusout)="resetValue($event,element)" [disabled]="!isModifiable(element)" (keyup.enter)="setValue($event,element)" [type]="getInputType(element)" [value]="getValue(element)"></textarea>
+                                                        </mat-form-field>
+                                                    </form>
+                                                </td>
+                                            </ng-container>
+
+                                            <!-- Abbrev Column -->
+                                            <ng-container layout="row" matColumnDef="abbrev">
+                                                <th mat-header-cell *matHeaderCellDef> Units </th>
+                                                <td mat-cell class="mat-cell-abbrev" layout="row" *matCellDef="let element">
+                                                    {{getAbbrev(element)}} </td>
+                                            </ng-container>
+
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                        </table>
+
+                                    </mat-expansion-panel>
+                                    <mat-divider></mat-divider>
+                                </mat-accordion>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </mat-tab>
+                    <mat-tab label="System Only" *ngIf="showElectricalSystem(element)">
+                        <mat-accordion *ngIf="showElectricalSystem(element)">
+                            <mat-expansion-panel class="mat-expansion-panel-system-parameters" [expanded]="true">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Electrical System Parameters
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <mat-accordion *ngFor="let group of getGroups(systemParameters)">
+                                    <mat-expansion-panel [expanded]="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                {{group}}
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <table mat-table [dataSource]="getParametersByGroup(systemParameters,group)" class="mat-elevation-z8">
+                                            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+                                            <!-- Name Column -->
+                                            <ng-container matColumnDef="name">
+                                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                            </ng-container>
+
+                                            <!-- Value Column -->
+                                            <ng-container matColumnDef="value">
+                                                <th mat-header-cell *matHeaderCellDef> Value </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <mat-checkbox #checkbox *ngIf='showCheckBox(element)' (change)="setValue($event,element)" [checked]='getValue(element,true)'>
+                                                    </mat-checkbox>
+                                                    <input #box class="matInputNumber" *ngIf="showInputArea(element)" [disabled]="!isModifiable(element)" (keyup.enter)="setValue($event,element)" (focusout)="resetValue($event,element)" [type]="getInputType(element)" [value]="getValue(element)">
+                                                    <form *ngIf="showTextArea(element)">
+                                                        <mat-form-field class="matInputTextArea">
+                                                            <textarea matInput (focusout)="resetValue($event,element)" [disabled]="!isModifiable(element)" (keyup.enter)="setValue($event,element)" [type]="getInputType(element)" [value]="getValue(element)"></textarea>
+                                                        </mat-form-field>
+                                                    </form>
+                                                </td>
+                                            </ng-container>
+
+                                            <!-- Abbrev Column -->
+                                            <ng-container layout="row" matColumnDef="abbrev">
+                                                <th mat-header-cell *matHeaderCellDef> Units </th>
+                                                <td mat-cell class="mat-cell-abbrev" layout="row" *matCellDef="let element">
+                                                    {{getAbbrev(element)}} </td>
+                                            </ng-container>
+
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                        </table>
+
+                                    </mat-expansion-panel>
+                                    <mat-divider></mat-divider>
+                                </mat-accordion>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </mat-tab>
+                </mat-tab-group>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>

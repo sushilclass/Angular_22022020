@@ -1,0 +1,9 @@
+<div class="jumbotron">
+    <div *ngIf="authService.authenticated; then welcomeUser else signInPrompt"></div>
+    <ng-template #welcomeUser>
+      <app-customer-list [userAuthToken]="this.authService.token"></app-customer-list>
+    </ng-template>
+    <ng-template #signInPrompt>
+      <a href="javascript:undefined" class="btn btn-primary btn-large" role="button" (click)="signIn()">Click here to sign in</a>
+    </ng-template>
+  </div>

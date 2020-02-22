@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+
+html, body { height: 100%; 
+            padding-top: 4.5rem;}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Style debug info in alerts */
+.alert-pre {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }

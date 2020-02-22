@@ -1,0 +1,77 @@
+// Import theming functions
+@import '~@angular/material/theming';
+@include mat-core();
+$primary: mat-palette($mat-indigo);
+$accent: mat-palette($mat-pink, A200, A100, A400);
+.mat-expansion-panel-element-parameters {
+    background-color: mat-color(mat-palette($mat-teal));
+}
+
+.col-md-12 {
+    padding: 0 5px 5px !important;
+    background-color: mat-color(mat-palette($mat-grey));
+}
+
+::ng-deep .mat-expansion-panel-body {
+    padding: 0 5px 5px !important;
+}
+
+.mat-expansion-panel-system-parameters {
+    background-color: mat-color(mat-palette($mat-indigo));
+}
+
+.mat-cell-abbrev {
+    padding-left: 5px;
+}
+
+.matInputTextArea,
+.matInputNumber {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+}
+
+.mat-column-name {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    flex: 0 0 25% !important;
+    width: 25% !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.mat-column-value {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    flex: 0 0 60% !important;
+    width: 60% !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.mat-column-abbrev {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    flex: 0 0 15% !important;
+    width: 15% !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+table {
+    width: 100%;
+}
